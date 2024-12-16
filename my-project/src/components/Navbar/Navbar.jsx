@@ -1,41 +1,62 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
+import Nav from "../Navbar/nav";
+import Nav2 from "../Navbar/nav2";
 
 const Navbar = () => {
-  return (
-    <div className="py-6">
-        <div className="container flex justify-between items-center">
-            {/* logo section */}
-            <div>   
-                <p className='text-lg font-semibold'>
-                    Kingsukh <span className='text-red-500' ><br></br>Guest House</span>
-                </p>
-            </div>
-            {/* Menu section */}
-            <div className='hidden md:block'>
-                <ul className="flex gap-8">
-                    {["Home", "About", "Services", "Rooms", "Gallery", "Contact"].map((item, index) => (
-                        <li
-                        key={index}
-                        className="relative group uppercase cursor-pointer text-gray-700 transition-transform duration-300 transform hover:-translate-y-1 hover:text-primary"
-                        >
-                        {item}
-                        <span className="absolute bottom-0 left-1/2 h-[2px] w-0 bg-primary transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            {/* button section */}
-            <div>
-                <a
-                    href="https://www.apple.com"
-                    className="bg-primary text-white px-4 py-4 rounded-xl hover:bg-secondary transform transition-transform duration-300 hover:-translate-y-2"
-                    >
-                    BOOK NOW
-                    </a>
-            </div>
-        </div> 
-    </div>
-  )
-}
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const toggle = () => setIsOpen(!isOpen);
 
-export default Navbar
+  useEffect(() => {
+    const handleResize = () => window.innerWidth >= 768 && setIsOpen(false);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="py-6 bg-[#e82574] md:bg-transparent">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Logo Section */}
+        <div>
+          <p className="text-lg font-semibold text-white">
+            Kingsukh Guest House
+          </p>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex justify-between">
+          <Nav />
+        </div>
+
+        {/* Button Section */}
+        <div className="hidden md:block">
+          <a
+            href="https://www.apple.com"
+            className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-secondary transform transition-transform duration-300 hover:-translate-y-2"
+          >
+            BOOK
+          </a>
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <button onClick={toggle} aria-label="Toggle Menu">
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+      </div>
+      
+      {/* Mobile Menu */}
+      <div
+        className={`md:hidden mt- -m-0 overflow-hidden transition-all duration-1000 ease-in-out ${
+          isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <Nav2 />
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
